@@ -19,27 +19,21 @@ with open('north_data/orders_data.csv', newline='') as csvfile:
     orders = [tuple(row) for row in reader if row[0].isnumeric()]
 
 # connect to database
-conn = psycopg2.connect(
+with psycopg2.connect(
     host='localhost',
     database='north',
     user='postgres',
-    password='********'
-)
+    password='***'
+) as conn:
+    with conn.cursor() as curs:
+        # execute query
+        curs.executemany('INSERT INTO customers VALUES (%s, %s, %s)', customers)
+        curs.execute('SELECT * FROM customers')
 
-# create cursor
-curs = conn.cursor()
+        curs.executemany('INSERT INTO employees VALUES (%s, %s, %s, %s, %s, %s)', employees)
+        curs.execute('SELECT * FROM employees')
 
-# execute query
-curs.executemany('INSERT INTO customers VALUES (%s, %s, %s)', customers)
-curs.execute('SELECT * FROM customers')
+        curs.executemany('INSERT INTO orders VALUES (%s, %s, %s, %s, %s)', orders)
+        curs.execute('SELECT * FROM orders')
 
-curs.executemany('INSERT INTO employees VALUES (%s, %s, %s, %s, %s, %s)', employees)
-curs.execute('SELECT * FROM employees')
-
-curs.executemany('INSERT INTO orders VALUES (%s, %s, %s, %s, %s)', orders)
-curs.execute('SELECT * FROM orders')
-
-conn.commit()
-
-curs.close()
-conn.close()
+        conn.commit()
