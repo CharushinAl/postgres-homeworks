@@ -2,10 +2,6 @@ import psycopg2
 import csv
 
 
-customers = []
-employees = []
-orders = []
-
 with open('north_data/customers_data.csv', newline='') as csvfile:
     reader = csv.reader(csvfile, delimiter=',')
     customers = [tuple(row) for row in reader if row[0].isupper()]
