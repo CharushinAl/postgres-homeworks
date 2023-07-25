@@ -18,7 +18,6 @@ with open('north_data/orders_data.csv', newline='') as csvfile:
     reader = csv.reader(csvfile, delimiter=',')
     orders = [tuple(row) for row in reader if row[0].isnumeric()]
 
-# connect to database
 with psycopg2.connect(
     host='localhost',
     database='north',
@@ -26,7 +25,7 @@ with psycopg2.connect(
     password='***'
 ) as conn:
     with conn.cursor() as curs:
-        # execute query
+
         curs.executemany('INSERT INTO customers VALUES (%s, %s, %s)', customers)
         curs.execute('SELECT * FROM customers')
 
